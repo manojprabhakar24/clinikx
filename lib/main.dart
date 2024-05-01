@@ -72,10 +72,15 @@ class _SuperAdminRegistrationFormState
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Designation is required';
+                          } else if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+                            return 'Designation must contain only alphabets';
+                          } else if (value.length > 100) {
+                            return 'Designation cannot exceed 100 characters';
                           }
                           return null;
                         },
                       ),
+
                       SizedBox(height: 20),
                       _buildTextField(
                         controller: _mobileController,
@@ -84,12 +89,13 @@ class _SuperAdminRegistrationFormState
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Mobile number is required';
-                          } else if (value.length != 10) {
-                            return 'Mobile number must be 10 digits';
+                          } else if (!RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
+                            return 'Enter a valid 10-digit mobile number starting with 6, 7, 8, or 9';
                           }
                           return null;
                         },
                       ),
+
                       SizedBox(height: 20),
                       _buildTextField(
                         controller: _emailController,
@@ -98,12 +104,19 @@ class _SuperAdminRegistrationFormState
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Email is required';
-                          } else if (!value.contains('@')) {
+                          } else if (value.length < 6 || value.length > 30) {
+                            return 'Email must be between 6 and 30 characters long';
+                          } else if (!RegExp(r'^[a-z0-9._]+@[a-z0-9]+\.[a-z]+').hasMatch(value)) {
                             return 'Enter a valid email address';
+                          } else if (value.startsWith('.') || value.endsWith('.')) {
+                            return 'Email cannot start or end with a dot';
+                          } else if (value.contains('..')) {
+                            return 'Email cannot have two consecutive dots';
                           }
                           return null;
                         },
                       ),
+
                       SizedBox(height: 20),
                       _buildTextField(
                         controller: _passwordController,
@@ -114,11 +127,14 @@ class _SuperAdminRegistrationFormState
                             return 'Password is required';
                           } else if (value.length < 6) {
                             return 'Password must be at least 6 characters';
+                          } else if (!_containsUppercase(value) ||
+                              !_containsSpecialCharacter(value)) {
+                            return 'Password must contain at least one uppercase letter and one special character';
                           }
                           return null;
                         },
                       ),
-                      SizedBox(height: 20),
+                SizedBox(height: 20),
                       _buildTextField(
                         controller: _confirmPasswordController,
                         labelText: 'Confirm Password',
@@ -132,6 +148,7 @@ class _SuperAdminRegistrationFormState
                           return null;
                         },
                       ),
+
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
@@ -173,6 +190,14 @@ class _SuperAdminRegistrationFormState
       ),
       validator: validator,
     );
+  }
+
+  bool _containsUppercase(String value) {
+    return value.contains(RegExp(r'[A-Z]'));
+  }
+
+  bool _containsSpecialCharacter(String value) {
+    return value.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
   }
 
   @override
