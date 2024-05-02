@@ -137,10 +137,9 @@ class _SuperAdminRegistrationFormState
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () async {
-                          // Check internet connectivity
-                          var connectivityResult = await Connectivity().checkConnectivity();
+                          var connectivityResult =
+                          await Connectivity().checkConnectivity();
                           if (connectivityResult == ConnectivityResult.none) {
-                            // No internet connection
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text('No internet connection'),
@@ -150,60 +149,65 @@ class _SuperAdminRegistrationFormState
                           }
 
                           if (_formKey.currentState!.validate()) {
-                            // Check if mobile number already exists
-                            FirebaseFirestore.instance
+                            // Check if mobile number already exists and its status
+                            QuerySnapshot querySnapshot = await FirebaseFirestore.instance
                                 .collection('super_admins')
                                 .where('mobile', isEqualTo: _mobileController.text)
-                                .get()
-                                .then((querySnapshot) {
-                              if (querySnapshot.docs.isNotEmpty) {
-                                // Mobile number already exists
+                                .get();
+
+                            if (querySnapshot.docs.isNotEmpty) {
+                              final status =
+                                  querySnapshot.docs.first.get('status') ?? '';
+                              if (status == 'AA') {
+                                // Mobile number already exists and its status is "AA" (Active)
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text('Mobile number is already registered'),
+                                    content: Text(
+                                        'Mobile number is already registered. Please use a different number or contact the administrator.'),
                                   ),
                                 );
-                              } else {
-                                // Save data to Firestore
-                                FirebaseFirestore.instance.collection('super_admins').add({
-                                  'name': _nameController.text,
-                                  'designation': _designationController.text,
-                                  'mobile': _mobileController.text,
-                                  'email': _emailController.text,
-                                  // You may want to encrypt the password before saving it to Firestore
-                                  // For demonstration purposes, I'm not encrypting it here
-                                  'password': _passwordController.text,
-                                }).then((value) {
-                                  // Show registration successful message
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Registration successful'),
-                                    ),
-                                  );
-                                  // Clear form fields after successful registration
-                                  _nameController.clear();
-                                  _designationController.clear();
-                                  _mobileController.clear();
-                                  _emailController.clear();
-                                  _passwordController.clear();
-                                  _confirmPasswordController.clear();
-                                }).catchError((error) {
-                                  // Show error message if registration fails
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Error: $error'),
-                                    ),
-                                  );
-                                });
+                              } else if (status == 'IA') {
+                                // Mobile number already exists and its status is "IA" (Inactive)
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Mobile number is already registered and status is inactive. Please use a different number or contact the administrator.'),
+                                  ),
+                                );
                               }
-                            }).catchError((error) {
-                              // Show error message if query fails
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text('Error: $error'),
-                                ),
-                              );
-                            });
+                            } else {
+                              // Save data to Firestore
+                              FirebaseFirestore.instance.collection('super_admins').add({
+                                'name': _nameController.text,
+                                'designation': _designationController.text,
+                                'mobile': _mobileController.text,
+                                'email': _emailController.text,
+                                // You may want to encrypt the password before saving it to Firestore
+                                // For demonstration purposes, I'm not encrypting it here
+                                'password': _passwordController.text,
+                              }).then((value) {
+                                // Show registration successful message
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Registration successful'),
+                                  ),
+                                );
+                                // Clear form fields after successful registration
+                                _nameController.clear();
+                                _designationController.clear();
+                                _mobileController.clear();
+                                _emailController.clear();
+                                _passwordController.clear();
+                                _confirmPasswordController.clear();
+                              }).catchError((error) {
+                                // Show error message if registration fails
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Error: $error'),
+                                  ),
+                                );
+                              });
+                            }
                           }
                         },
                         child: Text('Submit'),
