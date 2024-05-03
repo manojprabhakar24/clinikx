@@ -1,8 +1,7 @@
+import 'package:clinikx/Config.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-
-
 
 class SuperAdminRegistrationForm extends StatefulWidget {
   @override
@@ -23,9 +22,7 @@ class _SuperAdminRegistrationFormState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Center(child: Text('Super Admin Registration')), // Centered Title
-      ),
+
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           return SingleChildScrollView(
@@ -35,7 +32,20 @@ class _SuperAdminRegistrationFormState
               ),
               child: Padding(
                 padding: EdgeInsets.all(16.0),
-                child: Form(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                  // Image Widget added here
+                  Image.asset(
+                  AppConfig.imagelogo, // Provide your image path
+                  height: 100, // Adjust the height as needed
+                  width:100, // Take full width
+                   // Cover the entire space
+                ),
+                SizedBox(height: 20),
+                Center(child: Text('Super Admin Registration', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.blue),)),
+               SizedBox(height: 20),
+                Form(
                   key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -210,15 +220,26 @@ class _SuperAdminRegistrationFormState
                             }
                           }
                         },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20), // Adjust padding as needed
+                          textStyle: TextStyle(fontSize: 16), // Adjust text size as needed
+                        ),
                         child: Text('Submit'),
                       ),
-
+                      SizedBox(height: 20),
+                      // Image Widget below the button
+                      Image.asset(
+                        AppConfig.imageaddress, // Provide your image path
+                        height:120 , // Adjust the height as needed
+                        width: double.infinity, // Take full width
+                        fit: BoxFit.cover, // Cover the entire space
+                      ),
                     ],
                   ),
                 ),
-              ),
+              ]),
             ),
-          );
+          ));
         },
       ),
     );
