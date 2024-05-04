@@ -41,46 +41,46 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDapkO6LqYawyD3PtyXJp4qcrYzgOZsIEo',
-    appId: '1:977743006223:web:6a65c8d5affb293c00f17a',
-    messagingSenderId: '977743006223',
-    projectId: 'newotp-60ee9',
-    authDomain: 'newotp-60ee9.firebaseapp.com',
-    storageBucket: 'newotp-60ee9.appspot.com',
+    apiKey: 'AIzaSyAV_ecTr_AeRkLVEReIpXyFmVAzH_81QvQ',
+    appId: '1:65822503237:web:caf4dcfb63209105e70e2c',
+    messagingSenderId: '65822503237',
+    projectId: 'clinikx-b1b1e',
+    authDomain: 'clinikx-b1b1e.firebaseapp.com',
+    storageBucket: 'clinikx-b1b1e.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDM6suH9aTSJ8U7bDFiv9cmkh-IzSGT_iE',
-    appId: '1:977743006223:android:c05539a83608df9f00f17a',
-    messagingSenderId: '977743006223',
-    projectId: 'newotp-60ee9',
-    storageBucket: 'newotp-60ee9.appspot.com',
+    apiKey: 'AIzaSyAKJhlniLkcFBxyLbqKMRBFkMput3VLL2Q',
+    appId: '1:65822503237:android:42ae7ce69bd2f9e4e70e2c',
+    messagingSenderId: '65822503237',
+    projectId: 'clinikx-b1b1e',
+    storageBucket: 'clinikx-b1b1e.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAOd-KqahjNKvlUNvneWyoc1ok5umJ5fEI',
-    appId: '1:977743006223:ios:d4b2242f8cce548200f17a',
-    messagingSenderId: '977743006223',
-    projectId: 'newotp-60ee9',
-    storageBucket: 'newotp-60ee9.appspot.com',
+    apiKey: 'AIzaSyAcp4IYQEinIBSMSUBwAUb8XOltrvzUXm4',
+    appId: '1:65822503237:ios:3ce0e9abba15a862e70e2c',
+    messagingSenderId: '65822503237',
+    projectId: 'clinikx-b1b1e',
+    storageBucket: 'clinikx-b1b1e.appspot.com',
     iosBundleId: 'com.example.clinikx',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAOd-KqahjNKvlUNvneWyoc1ok5umJ5fEI',
-    appId: '1:977743006223:ios:d4b2242f8cce548200f17a',
-    messagingSenderId: '977743006223',
-    projectId: 'newotp-60ee9',
-    storageBucket: 'newotp-60ee9.appspot.com',
+    apiKey: 'AIzaSyAcp4IYQEinIBSMSUBwAUb8XOltrvzUXm4',
+    appId: '1:65822503237:ios:3ce0e9abba15a862e70e2c',
+    messagingSenderId: '65822503237',
+    projectId: 'clinikx-b1b1e',
+    storageBucket: 'clinikx-b1b1e.appspot.com',
     iosBundleId: 'com.example.clinikx',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDapkO6LqYawyD3PtyXJp4qcrYzgOZsIEo',
-    appId: '1:977743006223:web:31bca3adb142a9dc00f17a',
-    messagingSenderId: '977743006223',
-    projectId: 'newotp-60ee9',
-    authDomain: 'newotp-60ee9.firebaseapp.com',
-    storageBucket: 'newotp-60ee9.appspot.com',
+    apiKey: 'AIzaSyAV_ecTr_AeRkLVEReIpXyFmVAzH_81QvQ',
+    appId: '1:65822503237:web:f128c56e71aff587e70e2c',
+    messagingSenderId: '65822503237',
+    projectId: 'clinikx-b1b1e',
+    authDomain: 'clinikx-b1b1e.firebaseapp.com',
+    storageBucket: 'clinikx-b1b1e.appspot.com',
   );
 }

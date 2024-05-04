@@ -36,12 +36,15 @@ class _SuperAdminRegistrationFormState
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                   // Image Widget added here
-                  Image.asset(
-                  AppConfig.imagelogo, // Provide your image path
-                  height: 100, // Adjust the height as needed
-                  width:100, // Take full width
-                   // Cover the entire space
-                ),
+                    Image.asset(
+                      AppConfig.imagelogo,
+                      height: MediaQuery.of(context).size.width < 600
+                          ? 50 // reduce the height for smaller screens
+                          : 100,
+                      width: MediaQuery.of(context).size.width < 600
+                          ? 50 // reduce the width for smaller screens
+                          : 100,
+                    ),
                 SizedBox(height: 20),
                 Center(child: Text('Super Admin Registration', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.blue),)),
                SizedBox(height: 20),
@@ -160,14 +163,14 @@ class _SuperAdminRegistrationFormState
 
                           if (_formKey.currentState!.validate()) {
                             // Check if mobile number already exists and its status
+                            // Check if mobile number already exists and its status
                             QuerySnapshot querySnapshot = await FirebaseFirestore.instance
                                 .collection('super_admins')
                                 .where('mobile', isEqualTo: _mobileController.text)
                                 .get();
 
                             if (querySnapshot.docs.isNotEmpty) {
-                              final status =
-                                  querySnapshot.docs.first.get('status') ?? '';
+                              final status = querySnapshot.docs.first.get('status') ?? '';
                               if (status == 'AA') {
                                 // Mobile number already exists and its status is "AA" (Active)
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -184,8 +187,17 @@ class _SuperAdminRegistrationFormState
                                         'Mobile number is already registered and status is inactive. Please use a different number or contact the administrator.'),
                                   ),
                                 );
+                              } else {
+                                // Mobile number already exists but status is neither "AA" nor "IA"
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                        'Mobile number is already registered with an unknown status. Please contact the administrator.'),
+                                  ),
+                                );
                               }
-                            } else {
+                            }
+                            else {
                               // Save data to Firestore
                               FirebaseFirestore.instance.collection('super_admins').add({
                                 'name': _nameController.text,
@@ -230,9 +242,8 @@ class _SuperAdminRegistrationFormState
                       // Image Widget below the button
                       Image.asset(
                         AppConfig.imageaddress, // Provide your image path
-                        height:120 , // Adjust the height as needed
                         width: double.infinity, // Take full width
-                        fit: BoxFit.cover, // Cover the entire space
+                        fit: BoxFit.contain, // Ensure the entire image is visible
                       ),
                     ],
                   ),
@@ -244,7 +255,6 @@ class _SuperAdminRegistrationFormState
       ),
     );
   }
-
   Widget _buildTextField({
     required TextEditingController controller,
     required String labelText,
@@ -260,9 +270,32 @@ class _SuperAdminRegistrationFormState
         labelText: labelText,
         border: OutlineInputBorder(),
       ),
-      validator: validator,
+      validator: (value) {
+        if (validator != null) {
+          String? error = validator(value);
+          if (error != null) {
+            return error;
+          }
+        }
+
+        // Additional validation for the "Enter Name" field
+        if (labelText == 'Enter Name') {
+          if (value == null || value.isEmpty) {
+            return 'Name is required';
+          } else if (!RegExp(r'^[a-zA-Z\s\-]+$').hasMatch(value)) {
+            return 'Name must contain only alphabetic characters, spaces, and hyphens';
+          } else if (value.length > 50) {
+            return 'Name cannot exceed 50 characters';
+          }
+        }
+
+        return null;
+      },
     );
   }
+
+
+
 
   bool _containsUppercase(String value) {
     return value.contains(RegExp(r'[A-Z]'));
