@@ -60,7 +60,7 @@ class _SuperAdminRegistrationFormState
                                 ),
                               ),
                               Image.asset(
-                                'assets/images/matrical.jpg',
+                                'assets/images/Matricallogo.png',
                                 height: 80,
                                 width: 50,
                               ),
