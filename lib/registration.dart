@@ -69,11 +69,12 @@ class _SuperAdminRegistrationFormState
                         ],
                       ),
                       // Existing logo
-                      Image.asset(
-                        AppConfig.imagelogo,
-                        height: MediaQuery.of(context).size.width < 600 ? 100 : 200,
-                        width: MediaQuery.of(context).size.width < 600 ? 100 : 200,
-                      ),
+                      if (MediaQuery.of(context).size.width >= 600)
+                        Image.asset(
+                          AppConfig.imagelogo,
+                          height: 200,
+                          width: 200,
+                        ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -93,10 +94,151 @@ class _SuperAdminRegistrationFormState
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: _buildTextFieldWithIcon(
+                            // For desktop view, display all text fields in a row
+                            if (MediaQuery.of(context).size.width >= 600)
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                      children: [
+                                        _buildTextFieldWithIcon(
+                                          controller: _nameController,
+                                          labelText: 'Enter Name',
+                                          icon: Icons.person,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Name is required';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                        SizedBox(height: 20),
+                                        _buildTextFieldWithIcon(
+                                          controller:
+                                          _designationController,
+                                          labelText: 'Enter Designation',
+                                          icon: Icons.work,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Designation is required';
+                                            } else if (!RegExp(r'^[a-zA-Z]+$')
+                                                .hasMatch(value)) {
+                                              return 'Designation must contain only alphabets';
+                                            } else if (value.length > 100) {
+                                              return 'Designation cannot exceed 100 characters';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                        SizedBox(height: 20),
+                                        _buildTextFieldWithIcon(
+                                          controller: _mobileController,
+                                          labelText:
+                                          'Enter Mobile Number',
+                                          icon: Icons.phone,
+                                          keyboardType:
+                                          TextInputType.phone,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Mobile number is required';
+                                            } else if (!RegExp(r'^[6-9]\d{9}$')
+                                                .hasMatch(value)) {
+                                              return 'Enter a valid 10-digit mobile number starting with 6, 7, 8, or 9';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                        SizedBox(height: 20),
+                                        _buildTextFieldWithIcon(
+                                          controller: _emailController,
+                                          labelText: 'Enter Email',
+                                          icon: Icons.email,
+                                          keyboardType:
+                                          TextInputType.emailAddress,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Email is required';
+                                            } else if (value.length < 6 ||
+                                                value.length > 30) {
+                                              return 'Email must be between 6 and 30 characters long';
+                                            } else if (!RegExp(
+                                                r'^[a-z0-9._]+@[a-z0-9]+\.[a-z]+')
+                                                .hasMatch(value)) {
+                                              return 'Enter a valid email address';
+                                            } else if (value.startsWith('.') ||
+                                                value.endsWith('.')) {
+                                              return 'Email cannot start or end with a dot';
+                                            } else if (value.contains('..')) {
+                                              return 'Email cannot have two consecutive dots';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SizedBox(width: 20),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                      children: [
+                                        _buildTextFieldWithIcon(
+                                          controller: _passwordController,
+                                          labelText: 'Enter Password',
+                                          icon: Icons.lock,
+                                          obscureText: true,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Password is required';
+                                            } else if (value.length < 6) {
+                                              return 'Password must be at least 6 characters';
+                                            } else if (!_containsUppercase(
+                                                value) ||
+                                                !_containsSpecialCharacter(
+                                                    value)) {
+                                              return 'Password must contain at least one uppercase letter and one special character';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                        SizedBox(height: 20),
+                                        _buildTextFieldWithIcon(
+                                          controller:
+                                          _confirmPasswordController,
+                                          labelText: 'Confirm Password',
+                                          icon: Icons.lock,
+                                          obscureText: true,
+                                          validator: (value) {
+                                            if (value == null ||
+                                                value.isEmpty) {
+                                              return 'Please confirm password';
+                                            } else if (value !=
+                                                _passwordController.text) {
+                                              return 'Passwords do not match';
+                                            }
+                                            return null;
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            // For mobile view or smaller screens, display text fields in separate rows
+                            if (MediaQuery.of(context).size.width < 600)
+                              Column(
+                                crossAxisAlignment:
+                                CrossAxisAlignment.stretch,
+                                children: [
+                                  _buildTextFieldWithIcon(
                                     controller: _nameController,
                                     labelText: 'Enter Name',
                                     icon: Icons.person,
@@ -107,17 +249,16 @@ class _SuperAdminRegistrationFormState
                                       return null;
                                     },
                                   ),
-                                ),
-                                SizedBox(width: 20),
-                                Expanded(
-                                  child: _buildTextFieldWithIcon(
+                                  SizedBox(height: 20),
+                                  _buildTextFieldWithIcon(
                                     controller: _designationController,
                                     labelText: 'Enter Designation',
                                     icon: Icons.work,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Designation is required';
-                                      } else if (!RegExp(r'^[a-zA-Z]+$').hasMatch(value)) {
+                                      } else if (!RegExp(r'^[a-zA-Z]+$')
+                                          .hasMatch(value)) {
                                         return 'Designation must contain only alphabets';
                                       } else if (value.length > 100) {
                                         return 'Designation cannot exceed 100 characters';
@@ -125,14 +266,8 @@ class _SuperAdminRegistrationFormState
                                       return null;
                                     },
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: _buildTextFieldWithIcon(
+                                  SizedBox(height: 20),
+                                  _buildTextFieldWithIcon(
                                     controller: _mobileController,
                                     labelText: 'Enter Mobile Number',
                                     icon: Icons.phone,
@@ -140,28 +275,32 @@ class _SuperAdminRegistrationFormState
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Mobile number is required';
-                                      } else if (!RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
+                                      } else if (!RegExp(r'^[6-9]\d{9}$')
+                                          .hasMatch(value)) {
                                         return 'Enter a valid 10-digit mobile number starting with 6, 7, 8, or 9';
                                       }
                                       return null;
                                     },
                                   ),
-                                ),
-                                SizedBox(width: 20),
-                                Expanded(
-                                  child: _buildTextFieldWithIcon(
+                                  SizedBox(height: 20),
+                                  _buildTextFieldWithIcon(
                                     controller: _emailController,
                                     labelText: 'Enter Email',
                                     icon: Icons.email,
-                                    keyboardType: TextInputType.emailAddress,
+                                    keyboardType:
+                                    TextInputType.emailAddress,
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Email is required';
-                                      } else if (value.length < 6 || value.length > 30) {
+                                      } else if (value.length < 6 ||
+                                          value.length > 30) {
                                         return 'Email must be between 6 and 30 characters long';
-                                      } else if (!RegExp(r'^[a-z0-9._]+@[a-z0-9]+\.[a-z]+').hasMatch(value)) {
+                                      } else if (!RegExp(
+                                          r'^[a-z0-9._]+@[a-z0-9]+\.[a-z]+')
+                                          .hasMatch(value)) {
                                         return 'Enter a valid email address';
-                                      } else if (value.startsWith('.') || value.endsWith('.')) {
+                                      } else if (value.startsWith('.') ||
+                                          value.endsWith('.')) {
                                         return 'Email cannot start or end with a dot';
                                       } else if (value.contains('..')) {
                                         return 'Email cannot have two consecutive dots';
@@ -169,14 +308,9 @@ class _SuperAdminRegistrationFormState
                                       return null;
                                     },
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: _buildTextFieldWithIcon(
+
+                                  SizedBox(height: 20),
+                                  _buildTextFieldWithIcon(
                                     controller: _passwordController,
                                     labelText: 'Enter Password',
                                     icon: Icons.lock,
@@ -193,10 +327,8 @@ class _SuperAdminRegistrationFormState
                                       return null;
                                     },
                                   ),
-                                ),
-                                SizedBox(width: 20),
-                                Expanded(
-                                  child: _buildTextFieldWithIcon(
+                                  SizedBox(height: 20),
+                                  _buildTextFieldWithIcon(
                                     controller: _confirmPasswordController,
                                     labelText: 'Confirm Password',
                                     icon: Icons.lock,
@@ -204,24 +336,28 @@ class _SuperAdminRegistrationFormState
                                     validator: (value) {
                                       if (value == null || value.isEmpty) {
                                         return 'Please confirm password';
-                                      } else if (value != _passwordController.text) {
+                                      } else if (value !=
+                                          _passwordController.text) {
                                         return 'Passwords do not match';
                                       }
                                       return null;
                                     },
                                   ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20),
+
+                                  SizedBox(height: 20),
+                                ],
+                              ),
                             ElevatedButton(
                               onPressed: () async {
                                 var connectivityResult =
                                 await Connectivity().checkConnectivity();
-                                if (connectivityResult == ConnectivityResult.none) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
+                                if (connectivityResult ==
+                                    ConnectivityResult.none) {
+                                  ScaffoldMessenger.of(context)
+                                      .showSnackBar(
                                     SnackBar(
-                                      content: Text('No internet connection'),
+                                      content:
+                                      Text('No internet connection'),
                                     ),
                                   );
                                   return;
@@ -229,18 +365,21 @@ class _SuperAdminRegistrationFormState
 
                                 if (_formKey.currentState!.validate()) {
                                   // Check if mobile number already exists and its status
-                                  QuerySnapshot querySnapshot = await FirebaseFirestore
-                                      .instance
+                                  QuerySnapshot querySnapshot =
+                                  await FirebaseFirestore.instance
                                       .collection('super_admins')
-                                      .where('mobile', isEqualTo: _mobileController.text)
+                                      .where('mobile',
+                                      isEqualTo: _mobileController.text)
                                       .get();
 
                                   if (querySnapshot.docs.isNotEmpty) {
                                     final status =
-                                        querySnapshot.docs.first.get('status') ?? '';
+                                        querySnapshot.docs.first.get('status') ??
+                                            '';
                                     if (status == 'AA') {
                                       // Mobile number already exists and its status is "AA" (Active)
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
                                           content: Text(
                                               'Mobile number is already registered. Please use a different number or contact the administrator.'),
@@ -248,7 +387,8 @@ class _SuperAdminRegistrationFormState
                                       );
                                     } else if (status == 'IA') {
                                       // Mobile number already exists and its status is "IA" (Inactive)
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
                                           content: Text(
                                               'Mobile number is already registered and status is inactive. Please use a different number or contact the administrator.'),
@@ -256,7 +396,8 @@ class _SuperAdminRegistrationFormState
                                       );
                                     } else {
                                       // Mobile number already exists but status is neither "AA" nor "IA"
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
                                           content: Text(
                                               'Mobile number is already registered with an unknown status. Please contact the administrator.'),
@@ -269,7 +410,8 @@ class _SuperAdminRegistrationFormState
                                         .collection('super_admins')
                                         .add({
                                       'name': _nameController.text,
-                                      'designation': _designationController.text,
+                                      'designation':
+                                      _designationController.text,
                                       'mobile': _mobileController.text,
                                       'email': _emailController.text,
                                       // You may want to encrypt the password before saving it to Firestore
@@ -277,9 +419,11 @@ class _SuperAdminRegistrationFormState
                                       'password': _passwordController.text,
                                     }).then((value) {
                                       // Show registration successful message
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
-                                          content: Text('Registration successful'),
+                                          content:
+                                          Text('Registration successful'),
                                         ),
                                       );
                                       // Clear form fields after successful registration
@@ -291,7 +435,8 @@ class _SuperAdminRegistrationFormState
                                       _confirmPasswordController.clear();
                                     }).catchError((error) {
                                       // Show error message if registration fails
-                                      ScaffoldMessenger.of(context).showSnackBar(
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
                                         SnackBar(
                                           content: Text('Error: $error'),
                                         ),
@@ -301,20 +446,21 @@ class _SuperAdminRegistrationFormState
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 30),
                                 textStyle: TextStyle(fontSize: 18),
                               ),
                               child: Text('Submit'),
                             ),
-                            SizedBox(height: 20),
-                            // Image Widget below the button
-                            Image.asset(
-                              AppConfig.imageaddress,
-                              width: double.infinity,
-                              fit: BoxFit.contain,
-                            ),
                           ],
                         ),
+                      ),
+                      SizedBox(height: 20),
+                      // Image Widget below the button
+                      Image.asset(
+                        AppConfig.imageaddress,
+                        width: double.infinity,
+                        fit: BoxFit.contain,
                       ),
                     ],
                   ),
@@ -336,46 +482,62 @@ class _SuperAdminRegistrationFormState
     String? Function(String?)? validator,
   }) {
     return Container(
-      margin: EdgeInsets.only(right: 20),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextFormField(
-              controller: controller,
-              keyboardType: keyboardType,
-              obscureText: obscureText,
-              style: TextStyle(fontSize: 16, color: Colors.black),
-              decoration: InputDecoration(
-                labelText: labelText,
-                labelStyle: TextStyle(color: Colors.grey),
-                fillColor: Colors.white,
-                filled: true,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey, width: 1.0),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue, width: 2.0),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red, width: 1.0),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.red, width: 2.0),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                errorStyle: TextStyle(color: Colors.red),
-                suffixIcon: Icon(icon),
-              ),
-              validator: validator,
-            ),
+      margin: EdgeInsets.only(bottom: 20),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: keyboardType,
+        obscureText: obscureText,
+        style: TextStyle(fontSize: 16, color: Colors.black),
+        decoration: InputDecoration(
+          labelText: labelText,
+          labelStyle: TextStyle(color: Colors.grey),
+          fillColor: Colors.white,
+          filled: true,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.grey, width: 1.0),
+            borderRadius: BorderRadius.circular(8.0),
           ),
-        ],
-      ),
-    );
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.blue, width: 2.0),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red, width: 1.0),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.red, width: 2.0),
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          errorStyle: TextStyle(color: Colors.red),
+          suffixIcon: Icon(icon),
+        ),
+    validator: (value) {
+    if (validator != null) {
+    String? error = validator(value);
+    if (error != null) {
+    return error;
+    }
+    }
+
+    // Additional validation for the "Enter Name" field
+    if (labelText == 'Enter Name') {
+    if (value == null || value.isEmpty) {
+    return 'Name is required';
+    } else if (!RegExp(r'^[a-zA-Z\s\-]+$').hasMatch(value)) {
+    return 'Name must contain only alphabetic characters, spaces, and hyphens';
+    } else if (value.length > 50) {
+    return 'Name cannot exceed 50 characters';
+    }
+    }
+
+    return null;
+    },
+    ));
   }
+
+
+
 
   bool _containsUppercase(String value) {
     return value.contains(RegExp(r'[A-Z]'));
